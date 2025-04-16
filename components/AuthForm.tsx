@@ -6,11 +6,11 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import Image from "next/image";
-import Link from "next/link"; // ✅ Use next/link instead of lucide-react
+import Link from "next/link";
 import { toast } from "sonner";
 import FormField from "./FormField";
+import { useRouter } from "next/navigation"; 
 
-// ✅ Define or import FormType
 type FormType = "sign-in" | "sign-up";
 
 const authFormSchema = (type: FormType) => {
@@ -25,6 +25,7 @@ const authFormSchema = (type: FormType) => {
 };
 
 const AuthForm = ({ type }: { type: FormType }) => {
+  const router = useRouter(); 
   const formSchema = authFormSchema(type);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -38,18 +39,20 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
   const isSignIn = type === "sign-in";
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (isSignIn) {
-        console.log("SIGN-IN", values);
+        toast.success("Signed in successfully!");
+        router.push("/"); 
       } else {
-        console.log("SIGN-UP", values);
+        toast.success("Account created successfully. Please sign in!");
+        router.push("/sign-in");
       }
     } catch (error) {
       console.error(error);
       toast.error(`There was an error: ${error}`);
     }
-  };
+  }
 
   return (
     <div className="card-border lg:min-w-[566px]">

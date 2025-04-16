@@ -32,8 +32,8 @@ const FormField = <T extends FieldValues>({
         <FormControl>
           <Input
             className="input"
-            type={type}
             placeholder={placeholder}
+            type={type}
             {...field}
           />
         </FormControl>
@@ -42,5 +42,4 @@ const FormField = <T extends FieldValues>({
     )}
   />
 );
-
 export default FormField;
