@@ -1,20 +1,26 @@
 "use client";
 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import Image from "next/image";
-import Link from "next/link"; // ✅ Use next/link instead of lucide-react
+import Link from "next/link";
 import { toast } from "sonner";
 import FormField from "./FormField";
+import { auth } from "@/firebase/client";
+import { useRouter } from "next/navigation";
+import { signIn, signUp } from "@/lib/actions/auth.action";
 
-// ✅ Define or import FormType
 type FormType = "sign-in" | "sign-up";
 
-const authFormSchema = (type: FormType) => {
-  return z.object({
+const authFormSchema = (type: FormType) =>
+  z.object({
     name:
       type === "sign-up"
         ? z.string().min(3, "Name must be at least 3 characters")
@@ -22,9 +28,9 @@ const authFormSchema = (type: FormType) => {
     email: z.string().email("Enter a valid email"),
     password: z.string().min(3, "Password must be at least 3 characters"),
   });
-};
 
 const AuthForm = ({ type }: { type: FormType }) => {
+  const router = useRouter();
   const formSchema = authFormSchema(type);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -38,18 +44,61 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
   const isSignIn = type === "sign-in";
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { name, email, password } = values;
+
     try {
-      if (isSignIn) {
-        console.log("SIGN-IN", values);
+      if (!isSignIn) {
+        // Sign-Up Flow
+        const userCredentials = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        const result = await signUp({
+          uid: userCredentials.user.uid,
+          name: name ?? "", // fallback for type safety
+          email,
+          password,
+        });
+
+        if (!result?.success) {
+          toast.error(result.message || "Sign up failed");
+          return;
+        }
+
+        toast.success("Account created successfully!");
+        router.push("/sign-in");
       } else {
-        console.log("SIGN-UP", values);
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        const idToken = await userCredential.user.getIdToken();
+
+        if (!idToken) {
+          toast.error("Sign in failed. No token returned.");
+          return;
+        }
+
+        const result = await signIn({ email, idToken });
+
+        if (!result?.success) {
+          toast.error(result?.message || "Sign in failed");
+          return;
+        }
+
+        toast.success("Signed in successfully!");
+        router.push("/");
       }
-    } catch (error) {
-      console.error(error);
-      toast.error(`There was an error: ${error}`);
+    } catch (error: any) {
+      console.error("Auth Error:", error);
+      toast.error(error.message || "Something went wrong");
     }
-  };
+  }
 
   return (
     <div className="card-border lg:min-w-[566px]">
