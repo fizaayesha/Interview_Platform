@@ -1,7 +1,7 @@
 import { getRandomInterviewCover } from "@/lib/utils";
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
-import { db } from "@/firebase/admin"; // or wherever your admin.ts file is located
+import { db } from "@/firebase/admin"; 
 
 export async function GET() {
   return Response.json({ success: true, data: "THANK YOU" }, { status: 200 });
