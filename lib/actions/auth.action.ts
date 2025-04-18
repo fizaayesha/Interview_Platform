@@ -45,14 +45,13 @@ export async function signIn(params: SignInParams) {
 
   try {
     const userRecord = await auth.getUserByEmail(email);
-    console.log("Found user:", userRecord.uid);
+    if (!userRecord)
+      return {
+        success: false,
+        message: "User does not exist. Create an account.",
+      };
 
     await setSessionCookie(idToken);
-
-    return {
-      success: true,
-      message: "Signed in successfully.",
-    };
   } catch (error: any) {
     console.error("Error signing in:", error);
 
@@ -62,14 +61,17 @@ export async function signIn(params: SignInParams) {
     };
   }
 }
+export async function signOut() {
+  const cookieStore = await cookies();
+  cookieStore.delete("session");
+}
 
 export async function setSessionCookie(idToken: string) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionCookie = await auth.createSessionCookie(idToken, {
     expiresIn: ONE_WEEK * 1000,
   });
-
-  (await cookieStore).set("session", sessionCookie, {
+  cookieStore.set("session", sessionCookie, {
     maxAge: ONE_WEEK,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -88,14 +90,14 @@ export async function getCurrentUser(): Promise<User | null> {
       .collection("users")
       .doc(decodededClaims.uid)
       .get();
-      if(!userRecord.exists){
-        return null;
-      }
+    if(!userRecord.exists){
+      return null;
+    }
 
-      return{
-        ...userRecord.data(),
-        id: userRecord.id,
-      } as User;
+    return{
+      ...userRecord.data(),
+      id: userRecord.id,
+    } as User;
   } catch (e) {
     console.log(e);
     return null;

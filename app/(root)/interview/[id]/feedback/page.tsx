@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import {
   getFeedbackByInterviewId,
-  getInterviewsById,
+  getInterviewById,
 } from "@/lib/actions/general.action";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -13,13 +13,12 @@ import React from "react";
 const page = async ({ params }: RouteParams) => {
   const { id } = await params;
   const user = await getCurrentUser();
-  const interview = await getInterviewsById(id);
+  const interview = await getInterviewById(id);
   if (!interview) redirect("/");
   const feedback = await getFeedbackByInterviewId({
     interviewId: id,
     userId: user?.id!,
   });
-  console.log(feedback);
   return (
     <section className="section-feedback">
       <div className="flex flex-row justify-center">
@@ -50,44 +49,54 @@ const page = async ({ params }: RouteParams) => {
             </p>
           </div>
         </div>
-        <hr />
-        <p>{feedback?.finalAssessment}</p>
-        <div className="flex flex-col gap-4">
-          <h2>Breakdown of the Interview:</h2>
-          {feedback?.categoryScores.map((item, index) => (
-            <div key={index}>
-              <p className="font-bold">
-                {index + 1}. {item.name} ({item.score}/100)
-              </p>
-              <p>{item.comment}</p>
-            </div>
+      </div>
+      <hr />
+      <p>{feedback?.finalAssessment}</p>
+      <div className="flex flex-col gap-4">
+        <h2>Breakdown of the Interview:</h2>
+        {feedback?.categoryScores?.map((item, index) => (
+          <div key={index}>
+            <p className="font-bold">
+              {index + 1}. {item.name} ({item.score}/100)
+            </p>
+            <p>{item.comment}</p>
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col gap-3">
+        <h3>Strengths</h3>
+        <ul>
+          {feedback?.strengths?.map((item, index) => (
+            <li key={index}>{item}</li>
           ))}
-        </div>
-        <div className="flex flex-col gap-3">
-          <h3>Strengths</h3>
-          <ul>
-            {feedback?.strengths.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex flex-col gap-3">
-          <h3>Areas for Improvement</h3>
-          <ul>
-            {feedback?.areasForImprovement.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="buttons">
-          <Button className="btn-secondary flex-1">
-            <Link href="/" className="flex w-full justify-center">
-              <p className="test-sm font-semibold text-primary-200 text-center">
-                Back to Dashboard
-              </p>
-            </Link>
-          </Button>
-        </div>
+        </ul>
+      </div>
+      <div className="flex flex-col gap-3">
+        <h3>Areas for Improvement</h3>
+        <ul>
+          {feedback?.areasForImprovement?.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </div>
+      <div className="buttons">
+        <Button className="btn-secondary flex-1">
+          <Link href="/" className="flex w-full justify-center">
+            <p className="text-sm font-semibold text-primary-200 text-center">
+              Back to Dashboard
+            </p>
+          </Link>
+        </Button>
+        <Button className="btn-primary flex-1">
+          <Link
+            href={`/interview/${id}`}
+            className="flex w-full justify-center"
+          >
+            <p className="text-sm font-semibold text-black text-center">
+              Retake Interview
+            </p>
+          </Link>
+        </Button>
       </div>
     </section>
   );
