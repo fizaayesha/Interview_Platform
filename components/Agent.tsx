@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { vapi } from "@/lib/vapi.sdk";
 import { interviewer } from "@/constants";
+import { createFeedback } from "@/lib/actions/general.action";
 const CallStatus = {
   INACTIVE: "INACTIVE",
   CONNECTING: "CONNECTING",
@@ -62,10 +63,11 @@ const Agent = ({
 
   const handleGenerateFeedback = async (messages: SavedMessage[]) => {
     console.log("Generate feedback here.");
-    const { success, id } = {
-      success: true,
-      id: feedback - id,
-    };
+    const { success, feedbackId: id } = await createFeedback({
+      interviewId: interviewId!,
+      userId: userId!,
+      transcript: messages,
+    });
     if (success && id) {
       router.push(`/interview/${interviewId}/feedback`);
     } else {
@@ -93,19 +95,18 @@ const Agent = ({
           userid: userId,
         },
       });
-    }
-    else{
-      let formatterQuestions = '';
-      if(questions){
-        formatterQuestions=questions
-        .map((question) => `-${question}`)
-        .join('\n')
+    } else {
+      let formatterQuestions = "";
+      if (questions) {
+        formatterQuestions = questions
+          .map((question) => `-${question}`)
+          .join("\n");
       }
-      await vapi.start(interviewer,{
-        variableValues:{
+      await vapi.start(interviewer, {
+        variableValues: {
           questions: formatterQuestions,
-        }
-      })
+        },
+      });
     }
   };
 
