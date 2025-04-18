@@ -1,3 +1,4 @@
+export const runtime = 'nodejs';
 import { getRandomInterviewCover } from "@/lib/utils";
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
