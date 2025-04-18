@@ -5,22 +5,22 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-success-100: #49de50;
-  --color-success-200: #42c748;
-  --color-destructive-100: #f75353;
-  --color-destructive-200: #c44141;
+  --color-success-100: #2ecc71; /* Forest green for success */
+  --color-success-200: #27ae60; /* Darker forest green */
+  --color-destructive-100: #e74c3c; /* Keeping red for destructive */
+  --color-destructive-200: #c0392b; /* Keeping darker red */
 
-  --color-primary-100: #dddfff;
-  --color-primary-200: #cac5fe;
+  --color-primary-100: #e8f5e9; /* Light moss green */
+  --color-primary-200: #81c784; /* Moss green */
 
-  --color-light-100: #d6e0ff;
-  --color-light-400: #6870a6;
-  --color-light-600: #4f557d;
-  --color-light-800: #24273a;
+  --color-light-100: #f1f8e9; /* Lightest green tint */
+  --color-light-400: #7b8f6c; /* Mid moss */
+  --color-light-600: #546e4a; /* Darker moss */
+  --color-light-800: #33502a; /* Deep forest */
 
-  --color-dark-100: #020408;
-  --color-dark-200: #27282f;
-  --color-dark-300: #242633;
+  --color-dark-100: #1b2e1e; /* Deep forest green */
+  --color-dark-200: #2c432f; /* Medium forest green */
+  --color-dark-300: #3a5a3f; /* Light forest green */
 
   --font-mona-sans: "Mona Sans", sans-serif;
 
@@ -47,11 +47,11 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --chart-1: oklch(0.6 0.18 135); /* Green tones for charts */
+  --chart-2: oklch(0.55 0.14 145);
+  --chart-3: oklch(0.7 0.15 155);
+  --chart-4: oklch(0.77 0.16 140);
+  --chart-5: oklch(0.65 0.17 130);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -81,14 +81,14 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --chart-1: oklch(0.6 0.18 135); /* Green chart colors for dark mode */
+  --chart-2: oklch(0.7 0.15 155);
+  --chart-3: oklch(0.55 0.14 145); 
+  --chart-4: oklch(0.65 0.17 130);
+  --chart-5: oklch(0.77 0.16 140);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: oklch(0.6 0.18 135); /* Forest green for sidebar */
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
@@ -221,7 +221,7 @@
     }
 
     .avatar {
-      @apply z-10 flex items-center justify-center blue-gradient rounded-full size-[120px] relative;
+      @apply z-10 flex items-center justify-center formal-gradient rounded-full size-[120px] relative;
 
       .animate-speak {
         @apply absolute inline-flex size-5/6 animate-ping rounded-full bg-primary-200 opacity-75;
@@ -295,11 +295,11 @@
 }
 
 @utility dark-gradient {
-  @apply bg-gradient-to-b from-[#1A1C20] to-[#08090D];
+  @apply bg-gradient-to-b from-[#2c432f] to-[#1b2e1e]; /* Forest green gradient */
 }
 
 @utility border-gradient {
-  @apply bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33];
+  @apply bg-gradient-to-b from-[#81c784] to-[#81c78433]; /* Moss green gradient */
 }
 
 @utility pattern {
@@ -307,11 +307,11 @@
 }
 
 @utility blue-gradient-dark {
-  @apply bg-gradient-to-b from-[#171532] to-[#08090D];
+  @apply bg-gradient-to-b from-[#2e5a34] to-[#1b2e1e]; /* Dark forest green gradient */
 }
 
-@utility blue-gradient {
-  @apply bg-gradient-to-l from-[#FFFFFF] to-[#CAC5FE];
+@utility formal-gradient {
+  @apply bg-gradient-to-l from-[#FFFFFF] to-[#c8e6c9]; /* Light moss green for formal elements */
 }
 
 @utility flex-center {

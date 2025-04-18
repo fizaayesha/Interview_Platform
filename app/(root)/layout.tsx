@@ -11,7 +11,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
       <nav className="root-layout">
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.svg" alt="logo" width={38} height={32} />
-          <h2 className="text-primary-100">Prepwise</h2>
+          <h2 className="text-primary-100">AI Interview</h2>
         </Link>
       </nav>
       {children}
